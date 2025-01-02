@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+      - name: order-service
+        image: dat35/order-service:latest 
+        ports:
+        - containerPort: 8000
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  ports:
+  - port: 8002
+    targetPort: 8000
+  selector:
+    app: order-service
